@@ -1,6 +1,6 @@
 source <sfile>:p:h/test.vim
 function! _convert(utf8, enc)
-  let mb = iconv#iconv(a:utf8, "utf-8", a:enc)
+  let mb = iconv#iconvb(a:utf8, "utf-8", a:enc)
   let utf8 = iconv#iconv(mb, a:enc, "utf-8")
   return a:utf8 ==# utf8
 endfunction
@@ -46,3 +46,31 @@ INFO cp932 JISX0208
 OK _convert("こんにちは", "cp932")
 INFO cp932ext
 OK _convert("№", "cp932")
+INFO utf16
+OK iconv#iconvb("ab", "utf-8", "utf-16") == [0xFE, 0xFF, 0, 0x61, 0, 0x62]
+OK iconv#iconv([0xFE, 0xFF, 0, 0x61, 0, 0x62], "utf-16", "utf-8") ==# "ab"
+OK iconv#iconv([0xFF, 0xFE, 0x61, 0, 0x62, 0], "utf-16", "utf-8") ==# "ab"
+OK _convert("hello", "utf-16")
+INFO utf16 surrogate pair
+OK _convert("𠀋", "utf-16")
+INFO utf16be
+OK iconv#iconvb("ab", "utf-8", "utf-16be") == [0, 0x61, 0, 0x62]
+OK _convert("hello", "utf-16be")
+INFO utf16be surrogate pair
+OK _convert("𠀋", "utf-16be")
+INFO utf16le
+OK iconv#iconvb("ab", "utf-8", "utf-16le") == [0x61, 0, 0x62, 0]
+OK _convert("hello", "utf-16le")
+INFO utf16be surrogate pair
+OK _convert("𠀋", "utf-16be")
+INFO utf32
+OK iconv#iconvb("ab", "utf-8", "utf-32") == [0x00, 0x00, 0xFE, 0xFF, 0x00, 0x00, 0x00, 0x61, 0x00, 0x00, 0x00, 0x62]
+OK iconv#iconv([0x00, 0x00, 0xFE, 0xFF, 0x00, 0x00, 0x00, 0x61, 0x00, 0x00, 0x00, 0x62], "utf-32", "utf-8") ==# "ab"
+OK iconv#iconv([0xFF, 0xFE, 0x00, 0x00, 0x61, 0x00, 0x00, 0x00, 0x62, 0x00, 0x00, 0x00], "utf-32", "utf-8") ==# "ab"
+OK _convert("hello", "utf-32")
+INFO utf32be
+OK iconv#iconvb("ab", "utf-8", "utf-32be") == [0x00, 0x00, 0x00, 0x61, 0x00, 0x00, 0x00, 0x62]
+OK _convert("hello", "utf-32be")
+INFO utf32le
+OK iconv#iconvb("ab", "utf-8", "utf-32le") == [0x61, 0x00, 0x00, 0x00, 0x62, 0x00, 0x00, 0x00]
+OK _convert("hello", "utf-32le")

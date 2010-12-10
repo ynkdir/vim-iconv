@@ -1,6 +1,6 @@
 " This is a port of libiconv
 " http://www.gnu.org/software/libiconv/
-" Last Change:  2010-12-09
+" Last Change:  2010-12-10
 " Maintainer:   Yukihiro Nakadaira <yukihiro.nakadaira@gmail.com>
 " License:      LGPL
 
@@ -41,6 +41,12 @@ endfunction
 let s:alias = {
       \ "ascii": function("iconv#ascii#new"),
       \ "utf-8": function("iconv#utf8#new"),
+      \ "utf-16": function("iconv#utf16#new"),
+      \ "utf-16be": function("iconv#utf16be#new"),
+      \ "utf-16le": function("iconv#utf16le#new"),
+      \ "utf-32": function("iconv#utf32#new"),
+      \ "utf-32be": function("iconv#utf32be#new"),
+      \ "utf-32le": function("iconv#utf32le#new"),
       \ "iso-8859-1": function("iconv#iso8859_1#new"),
       \ "iso-8859-2": function("iconv#iso8859_2#new"),
       \ "iso-8859-3": function("iconv#iso8859_3#new"),
