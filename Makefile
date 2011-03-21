@@ -10,3 +10,5 @@ test:
 push:
 	git push origin master
 
+dist:
+	git archive --format zip --prefix vim-iconv/ --output vim-iconv.zip master
