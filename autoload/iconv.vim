@@ -112,5 +112,6 @@ let s:iconv.codecs = {
       \ "cp936": function(s:ns."codecs#_cp936#import"),
       \ "cp949": function(s:ns."codecs#_cp949#import"),
       \ "cp950": function(s:ns."codecs#_cp950#import"),
+      \ "euc-jp": function(s:ns."codecs#_euc_jp#import"),
       \ }
 

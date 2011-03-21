@@ -27,13 +27,14 @@ function! s:parse_unicode(hex)
   return u
 endfunction
 
-function! s:parse_simple(fname)
+function! s:parse_simple(fname, columns, scol, ucol)
   let map = []
   for line in readfile(a:fname)
-    let m = matchlist(line, '\v^(0x\x+)\s+(0x\x+%(\+0x\x+)*)')
-    if !empty(m)
-      let s = s:parse_str(m[1])
-      let u = s:parse_unicode(m[2])
+    let line = substitute(line, '#.*$', '', '')
+    let cols = split(line)
+    if len(cols) == a:columns
+      let s = s:parse_str(cols[a:scol])
+      let u = s:parse_unicode(cols[a:ucol])
       call add(map, [s, u])
     endif
   endfor
@@ -42,7 +43,7 @@ endfunction
 
 function! s:make_simple(mapfile)
   let name = s:encname(a:mapfile)
-  let map = s:parse_simple(a:mapfile)
+  let map = s:parse_simple(a:mapfile, 2, 0, 1)
   let out = []
   let decoding_table_maxlen = max(map(copy(map), 'len(v:val[0])'))
   let encoding_table_maxlen = max(map(copy(map), 'len(v:val[1])'))
@@ -102,6 +103,47 @@ function! s:download(url)
     write %:p:t
   endif
   quit
+endfunction
+
+function! s:eucjptable()
+  let x0201 = s:parse_simple('JIS0201.TXT', 2, 0, 1)
+  let x0208 = s:parse_simple('JIS0208.TXT', 3, 1, 2)
+  let x0212 = s:parse_simple('JIS0212.TXT', 2, 0, 1)
+  let map = []
+  for i in range(0x20)
+    call add(map, [[i], [i]])
+  endfor
+
+  " TODO: make useful conversion table
+
+  " override
+  call add(map, [[0x7e], [0x007e]])
+
+  for [s, u] in x0201
+    if s[0] < 0x80
+      call add(map, [s, u])
+    else
+      call add(map, [[0x8E, s[0]], u])
+    endif
+  endfor
+
+  for [s, u] in x0208
+    call add(map, [[s[0] + 0x80, s[1] + 0x80], u])
+  endfor
+
+  for [s, u] in x0212
+    call add(map, [[0x8f, s[0] + 0x80, s[1] + 0x80], u])
+  endfor
+
+  let out = []
+  for [s, u] in map
+    let euc = '0x' . join(map(s, 'printf("%02x", v:val)'), '')
+    let uni = join(map(u, 'printf("0x%04x", v:val)'), '+')
+    call add(out, printf('%s %s', euc, uni))
+  endfor
+  call writefile(out, 'EUC-JP.TXT')
+
+  call s:make_simple('EUC-JP.TXT')
 endfunction
 
 function! s:main()
@@ -201,6 +243,12 @@ function! s:main()
   call s:make_simple("CP875.TXT")
   call s:download("http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/EBCDIC/CP1026.TXT")
   call s:make_simple("CP1026.TXT")
+
+  call s:download("http://www.unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/JIS/JIS0201.TXT")
+  call s:download("http://www.unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/JIS/JIS0208.TXT")
+  call s:download("http://www.unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/JIS/JIS0212.TXT")
+  call s:eucjptable()
+
   quit
 endfunction
 
