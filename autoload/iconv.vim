@@ -1,5 +1,6 @@
 " Last Change:  2011-03-21
 " Maintainer:   Yukihiro Nakadaira <yukihiro.nakadaira@gmail.com>
+" License:      This file is placed in the public domain.
 
 let s:ns = expand('<sfile>:p:r:gs?[\\/]?#?:s?^.*#autoload#??:s?$?#?')
 
