@@ -68,6 +68,7 @@ let s:iconv.codecs = {
       \ "utf-32": function(s:ns."codecs#utf32#import"),
       \ "utf-32be": function(s:ns."codecs#utf32be#import"),
       \ "utf-32le": function(s:ns."codecs#utf32le#import"),
+      \ "latin1": function(s:ns."codecs#_8859_1#import"),
       \ "iso-8859-1": function(s:ns."codecs#_8859_1#import"),
       \ "iso-8859-2": function(s:ns."codecs#_8859_2#import"),
       \ "iso-8859-3": function(s:ns."codecs#_8859_3#import"),
