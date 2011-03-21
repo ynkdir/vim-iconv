@@ -5,6 +5,7 @@ function! _convert(utf8, enc)
   return a:utf8 ==# utf8
 endfunction
 INFO iconv test
+
 OK iconv#iconv("hello", "ascii", "ascii") ==# "hello"
 OK iconv#iconv("hello", "iso-8859-1", "iso-8859-1") ==# "hello"
 OK iconv#iconv("hello", "iso-8859-2", "iso-8859-2") ==# "hello"
@@ -20,32 +21,7 @@ OK iconv#iconv("hello", "iso-8859-11", "iso-8859-11") ==# "hello"
 OK iconv#iconv("hello", "iso-8859-13", "iso-8859-13") ==# "hello"
 OK iconv#iconv("hello", "iso-8859-14", "iso-8859-14") ==# "hello"
 OK iconv#iconv("hello", "iso-8859-15", "iso-8859-15") ==# "hello"
-OK iconv#iconv("hello", "iso-2022-jp", "iso-2022-jp") ==# "hello"
-OK iconv#iconv("hello", "iso-2022-jp-1", "iso-2022-jp-1") ==# "hello"
-OK iconv#iconv("hello", "iso-2022-jp-3", "iso-2022-jp-3") ==# "hello"
-OK iconv#iconv("hello", "euc-jp", "euc-jp") ==# "hello"
-OK iconv#iconv("hello", "euc-jisx0213", "euc-jisx0213") ==# "hello"
-OK iconv#iconv("hello", "sjis", "sjis") ==# "hello"
-OK iconv#iconv("hello", "shift-jisx0213", "shift-jisx0213") ==# "hello"
-OK iconv#iconv("hello", "cp932", "cp932") ==# "hello"
-INFO JISX0201 hankaku kana
-OK _convert("ｺﾝﾆﾁﾊ", "euc-jp")
-INFO euc-jp JISX0208
-OK _convert("こんにちは", "euc-jp")
-INFO euc-jp JISX0212
-OK _convert("№", "euc-jp")
-INFO euc-jp JISX0213
-OK _convert("こんにちは", "euc-jisx0213")
-INFO sjis JISX0201 hankaku kana
-OK _convert("ｺﾝﾆﾁﾊ", "sjis")
-INFO sjis JISX0208
-OK _convert("こんにちは", "sjis")
-INFO shift-jisx0213
-OK _convert("こんにちは", "shift-jisx0213")
-INFO cp932 JISX0208
-OK _convert("こんにちは", "cp932")
-INFO cp932ext
-OK _convert("№", "cp932")
+
 INFO utf16
 OK iconv#iconvb("ab", "utf-8", "utf-16") == [0xFE, 0xFF, 0, 0x61, 0, 0x62]
 OK iconv#iconv([0xFE, 0xFF, 0, 0x61, 0, 0x62], "utf-16", "utf-8") ==# "ab"
@@ -74,3 +50,32 @@ OK _convert("hello", "utf-32be")
 INFO utf32le
 OK iconv#iconvb("ab", "utf-8", "utf-32le") == [0x61, 0x00, 0x00, 0x00, 0x62, 0x00, 0x00, 0x00]
 OK _convert("hello", "utf-32le")
+
+INFO cp932
+OK iconv#iconv("hello", "cp932", "cp932") ==# "hello"
+INFO cp932 JISX0208
+OK _convert("こんにちは", "cp932")
+INFO cp932ext
+OK _convert("№", "cp932")
+
+"OK iconv#iconv("hello", "iso-2022-jp", "iso-2022-jp") ==# "hello"
+"OK iconv#iconv("hello", "iso-2022-jp-1", "iso-2022-jp-1") ==# "hello"
+"OK iconv#iconv("hello", "iso-2022-jp-3", "iso-2022-jp-3") ==# "hello"
+"OK iconv#iconv("hello", "euc-jp", "euc-jp") ==# "hello"
+"OK iconv#iconv("hello", "euc-jisx0213", "euc-jisx0213") ==# "hello"
+"OK iconv#iconv("hello", "sjis", "sjis") ==# "hello"
+"OK iconv#iconv("hello", "shift-jisx0213", "shift-jisx0213") ==# "hello"
+"INFO JISX0201 hankaku kana
+"OK _convert("ｺﾝﾆﾁﾊ", "euc-jp")
+"INFO euc-jp JISX0208
+"OK _convert("こんにちは", "euc-jp")
+"INFO euc-jp JISX0212
+"OK _convert("№", "euc-jp")
+"INFO euc-jp JISX0213
+"OK _convert("こんにちは", "euc-jisx0213")
+"INFO sjis JISX0201 hankaku kana
+"OK _convert("ｺﾝﾆﾁﾊ", "sjis")
+"INFO sjis JISX0208
+"OK _convert("こんにちは", "sjis")
+"INFO shift-jisx0213
+"OK _convert("こんにちは", "shift-jisx0213")
