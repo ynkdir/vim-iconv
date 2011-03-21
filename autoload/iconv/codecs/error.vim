@@ -40,3 +40,33 @@ function s:error.replace(exception, object, start, end)
   endif
 endfunction
 
+function s:error._tobackslash(x)
+endfunction
+
+function s:error._tobackslashuni(x)
+endfunction
+
+function s:error.backslashreplace(exception, object, start, end)
+  if a:exception =~ '^UnicodeDecodeError:'
+    let out = []
+    for x in a:object[a:start : a:end]
+      let s = printf('\x%02x', x)
+      call extend(out, map(range(len(s)), 'char2nr(s[v:val])'))
+    endfor
+    return [out, a:end + 1]
+  elseif a:exception =~ '^UnicodeEncodeError:'
+    let out = []
+    for x in a:object[a:start : a:end]
+      if x < 0x10000
+        let s = printf('\u%04x', x)
+      else
+        let s = printf('\U%08x', x)
+      endif
+      call extend(out, map(range(len(s)), 'char2nr(s[v:val])'))
+    endfor
+    return [out, a:end + 1]
+  else
+    throw printf("error.backslashreplace: can't handle error: %s", exception)
+  endif
+endfunction
+

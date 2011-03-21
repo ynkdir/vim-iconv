@@ -7,15 +7,17 @@ function {s:ns}import()
   return s:iconv
 endfunction
 
-function {s:ns}iconv(expr, from, to)
+function {s:ns}iconv(expr, from, to, ...)
+  let errors = get(a:000, 0, 'strict')
   try
-    return s:iconv.iconv(a:expr, a:from, a:to)
+    return s:iconv.iconv(a:expr, a:from, a:to, errors)
   endtry
 endfunction
 
-function {s:ns}iconvb(expr, from, to)
+function {s:ns}iconvb(expr, from, to, ...)
+  let errors = get(a:000, 0, 'strict')
   try
-    return s:iconv.iconvb(a:expr, a:from, a:to)
+    return s:iconv.iconvb(a:expr, a:from, a:to, errors)
   endtry
 endfunction
 
@@ -23,16 +25,16 @@ let s:bytes = {s:ns}bytes#import()
 
 let s:iconv = {}
 
-function s:iconv.iconv(expr, from, to)
-  return s:bytes.bytes2str(self.iconvb(a:expr, a:from, a:to))
+function s:iconv.iconv(expr, from, to, errors)
+  return s:bytes.bytes2str(self.iconvb(a:expr, a:from, a:to, a:errors))
 endfunction
 
-function s:iconv.iconvb(expr, from, to)
+function s:iconv.iconvb(expr, from, to, errors)
   let expr = s:bytes.tobytes(a:expr)
-  return self._iconv(expr, a:from, a:to)
+  return self._iconv(expr, a:from, a:to, a:errors)
 endfunction
 
-function s:iconv._iconv(expr, from, to)
+function s:iconv._iconv(expr, from, to, errors)
   let from = tolower(a:from)
   let to = tolower(a:to)
 
@@ -50,8 +52,8 @@ function s:iconv._iconv(expr, from, to)
   let decoder = decoder_module.Codec.new()
   let encoder = encoder_module.Codec.new()
 
-  let u = decoder.decode(a:expr, 'strict')
-  let s = encoder.encode(u, 'strict')
+  let u = decoder.decode(a:expr, a:errors)
+  let s = encoder.encode(u, a:errors)
 
   return s
 endfunction
