@@ -5,7 +5,7 @@ set nomore
 
 if has('vim_starting')
   set loadplugins
-  call feedkeys(":source " . expand('<sfile>:t') . "\<CR>")
+  call feedkeys(":source " . expand('<sfile>:p') . "\<CR>")
   finish
 endif
 
