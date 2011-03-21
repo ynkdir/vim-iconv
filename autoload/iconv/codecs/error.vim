@@ -40,12 +40,6 @@ function s:error.replace(exception, object, start, end)
   endif
 endfunction
 
-function s:error._tobackslash(x)
-endfunction
-
-function s:error._tobackslashuni(x)
-endfunction
-
 function s:error.backslashreplace(exception, object, start, end)
   if a:exception =~ '^UnicodeDecodeError:'
     let out = []
