@@ -116,13 +116,13 @@ function! s:eucjptable()
 
   " TODO: make useful conversion table
 
-  " override
-  call add(map, [[0x7e], [0x007e]])
+  " ASCII
+  for i in range(0x80)
+    call add(map, [[i], [i]])
+  endfor
 
   for [s, u] in x0201
-    if s[0] < 0x80
-      call add(map, [s, u])
-    else
+    if s[0] >= 0x80
       call add(map, [[0x8E, s[0]], u])
     endif
   endfor
